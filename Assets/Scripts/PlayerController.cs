@@ -15,6 +15,11 @@ public class PlayerController : MonoBehaviour {
 
     [SerializeField]
     private GameObject shot;
+    [SerializeField]
+    private CameraController mainCamera;
+    [SerializeField]
+    private float attackSpeed;
+    private float fireRate = 0f;
 
 
 	// Use this for initialization
@@ -26,8 +31,10 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
         Move();
 
-        if ( Input.GetKey(KeyCode.K))
+        if ( Input.GetKey(KeyCode.K) && Time.time > fireRate) {
+            fireRate = Time.time + attackSpeed;
             Shoot();
+        }
 	}
 
     private void Move() {
@@ -49,6 +56,7 @@ public class PlayerController : MonoBehaviour {
         GameObject auxGO = (GameObject) Instantiate(shot, this.transform.position, Quaternion.identity);
         Rigidbody2D auxRB = auxGO.GetComponent<Rigidbody2D>();
         auxRB.AddForce(Vector2.up * shootForce, ForceMode2D.Force);
+        
         
     }
 

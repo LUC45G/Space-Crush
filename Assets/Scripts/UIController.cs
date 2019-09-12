@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
@@ -10,12 +11,15 @@ public class UIController : MonoBehaviour {
     private int currentScore = 0;
     [SerializeField]
     private Text livesText;
-    private int lives = 3;
+    [SerializeField]
+    private GameObject esc;
+    [SerializeField]
+    private PlayerController player;
 
 	// Use this for initialization
 	void Start () {
 		scoreText.text = "Score: " + currentScore;
-        livesText.text = lives + "";
+        livesText.text = 3 + "";
 	}
 	
 	// Update is called once per frame
@@ -24,8 +28,14 @@ public class UIController : MonoBehaviour {
 	}
 
     public void LevelUp() {
-        lives = 3;
-        livesText.text = lives + "";
+        livesText.text = 3 + "";
+        esc.SetActive(false);
+        esc.SetActive(true);
+        player.RestartPosition();
+    }
+
+    public void RestartGame() {
+        SceneManager.LoadScene(0);
     }
 
     public void UpdateScore(int newScore) {
@@ -33,8 +43,7 @@ public class UIController : MonoBehaviour {
         scoreText.text = "Score: " + currentScore;
     }
 
-    public void HPLost() {
-        lives--;
+    public void HPLost(int lives) {
         livesText.text = lives + "";
     }
 }

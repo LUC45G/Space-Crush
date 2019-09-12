@@ -18,12 +18,17 @@ public class PlayerController : MonoBehaviour {
     [SerializeField]
     private CameraController mainCamera;
     [SerializeField]
+    private UIController uic;
+    [SerializeField]
     private float attackSpeed;
     private float fireRate = 0f;
+    private int lives = 3;
+    private Vector3 initialPosition;
 
 
 	// Use this for initialization
 	void Start () {
+        initialPosition = this.transform.position;
 		
 	}
 	
@@ -44,6 +49,7 @@ public class PlayerController : MonoBehaviour {
         if ( canMoveToLeft && temp < 0) {
             transform.position += move * movementSpeed;
             canMoveToRight = true;
+            return;
         }
         if ( canMoveToRight && temp > 0) {
             transform.position += move * movementSpeed;
@@ -65,5 +71,20 @@ public class PlayerController : MonoBehaviour {
             canMoveToLeft = false;
         else if ( col.gameObject.CompareTag("R_Limit"))
             canMoveToRight = false;
+    }
+
+    public void Hit() {
+        lives--;
+        mainCamera.Shake(0.5f, 0.7f);
+        
+        if(lives > 0)
+            uic.HPLost(lives);
+        else
+            uic.RestartGame();
+    }
+
+    public void RestartPosition() {
+        this.transform.position = initialPosition;
+        lives = 3;
     }
 }

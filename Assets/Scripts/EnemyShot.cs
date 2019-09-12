@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyShot : MonoBehaviour {
-
+    
+    private PlayerController player;
 	// Use this for initialization
 	void Start () {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 		
 	}
 	
@@ -22,9 +24,13 @@ public class EnemyShot : MonoBehaviour {
         }
 
         if( col.gameObject.CompareTag("Player")) {
-            Debug.Log("Player hit");
+            player.Hit();
+            this.gameObject.SetActive(false);
+            return;
+        }
 
-            
+        if( col.gameObject.CompareTag("Shot")) {
+            Destroy(col.gameObject);
             this.gameObject.SetActive(false);
             return;
         }

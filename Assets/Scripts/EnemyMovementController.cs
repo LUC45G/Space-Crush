@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyMovementController : MonoBehaviour {
 
-    private GameObject[,] enemies;
     private bool moveToRight = true;
 	// Use this for initialization
 	void Start () {
@@ -35,11 +34,5 @@ public class EnemyMovementController : MonoBehaviour {
 
     public void EnemiesGoRight() { moveToRight = true; }
     public void EnemiesGoLeft() { moveToRight = false; }
-
-    
-
-    public void setEnemies(GameObject[,] g) {
-        enemies = g;
-    }
 
 }

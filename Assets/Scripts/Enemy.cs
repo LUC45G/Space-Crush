@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour {
             esc.ChainDestruction(x, y, type, ref quantity);
 
             uic.UpdateScore( fib(quantity+1) * quantity * 10 );
-
+            esc.KillEnemies(quantity);
             mainCamera.Shake(0.03f * quantity, 0.2f * quantity);
 
             return;

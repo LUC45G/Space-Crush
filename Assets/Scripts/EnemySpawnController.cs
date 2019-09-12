@@ -8,24 +8,27 @@ public class EnemySpawnController : MonoBehaviour {
     private GameObject[] enemyList;
     [SerializeField]
     private EnemyMovementController emc;
-
+    [SerializeField]
+    private UIController uic;
     private GameObject[,] enemiesGO;
     private Enemy[,] enemies;
-    private int columns, rows;
+    private int columns, rows, totalEnemies;
     private System.Random r = new System.Random();
     private int vert, hor;
 
-    void Awake() {
+    void Init() {
         vert = (int) Camera.main.orthographicSize;
         hor = vert * (Screen.width / Screen.height);
         columns = 11; rows = 5;
         enemiesGO = new GameObject[columns, rows];
         enemies = new Enemy[columns, rows];
-
+        totalEnemies = columns*rows;
         Physics2D.queriesStartInColliders = false;
     }
-	// Use this for initialization
-	void Start () {
+	
+	void OnEnable () {
+
+        Init();
 
         int auxIndex;
 
@@ -42,9 +45,15 @@ public class EnemySpawnController : MonoBehaviour {
                 
             }
         }
-
-        emc.setEnemies(enemiesGO);
 	}
+
+    public void KillEnemies(int quantity) {
+        totalEnemies -= quantity;
+
+        if(totalEnemies <= 0)
+            uic.LevelUp();
+            
+    }
 
     public void ChainDestruction(int x, int y, int type, ref int quantity) {
 

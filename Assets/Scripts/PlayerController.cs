@@ -4,23 +4,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    [SerializeField]
     private float movementSpeed = 0.3f;
-    [SerializeField]
-    private float shootForce = 25f;
+    private float shootForce = 500f;
     private bool canMoveToLeft = true, canMoveToRight = true;
 
-    [SerializeField]
-    private Rigidbody2D rb;
 
     [SerializeField]
     private GameObject shot;
     [SerializeField]
     private CameraController mainCamera;
     [SerializeField]
-    private UIController uic;
-    [SerializeField]
-    private float attackSpeed;
+    private UIController uiController;
+    
+    private float attackSpeed = 0.5f;
     private float fireRate = 0f;
     private int lives = 3;
     private Vector3 initialPosition;
@@ -78,12 +74,12 @@ public class PlayerController : MonoBehaviour {
         mainCamera.Shake(0.5f, 0.7f);
         
         if(lives > 0)
-            uic.HPLost(lives);
+            uiController.HPLost(lives);
         else
-            uic.RestartGame();
+            uiController.RestartGame();
     }
 
-    public void RestartPosition() {
+    public void RestartPositionAndLives() {
         this.transform.position = initialPosition;
         lives = 3;
     }

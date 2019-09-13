@@ -16,9 +16,9 @@ public class EnemyMovementController : MonoBehaviour {
         Vector3 p = this.transform.position;
 
         if(moveToRight) {
-            this.transform.position = new Vector3(p.x+0.05f, p.y, p.z);
+            this.transform.position = new Vector3(p.x+0.035f, p.y, p.z);
         } else {
-            this.transform.position = new Vector3(p.x-0.05f, p.y, p.z);
+            this.transform.position = new Vector3(p.x-0.035f, p.y, p.z);
         }
     
 	}
@@ -29,7 +29,7 @@ public class EnemyMovementController : MonoBehaviour {
         Vector3 p;
 		
         p = this.transform.position;
-        this.transform.position = new Vector3(p.x, p.y - 0.1f, p.z);
+        this.transform.position = new Vector3(p.x, p.y - 0.05f, p.z);
     }
 
     public void EnemiesGoRight() { moveToRight = true; }

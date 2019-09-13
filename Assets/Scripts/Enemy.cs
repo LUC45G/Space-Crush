@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
-    private EnemySpawnController esc;
-    private EnemyMovementController emc;
-    private UIController uic; 
+    private EnemySpawnController enemySpawnController;
+    private EnemyMovementController enemyMovementController;
+    private UIController uiController; 
     private CameraController mainCamera;
+    private SpriteRenderer spriteRenderer;
     private GameObject auxGO;
     private System.Random rng = new System.Random(); // Generates random number used for random shooting
     private int auxRandom; // Random Integer used for random shooting
@@ -16,14 +17,18 @@ public class Enemy : MonoBehaviour {
     private int x, y; // coords on two dimmension array.
 
 
+
     // Use this for initialization
     void Start () {
 
+        GameObject auxHolder = GameObject.FindGameObjectWithTag("Holder");
+        GameObject auxEnemyHolder = GameObject.FindGameObjectWithTag("EnemyHolder");
         // Cant use SeralizeField because Enemies are prefabs
-        emc = GameObject.FindGameObjectWithTag("EnemyHolder").GetComponent<EnemyMovementController>();
-        esc = GameObject.FindGameObjectWithTag("EnemyHolder").GetComponent<EnemySpawnController>();
-        uic = GameObject.FindGameObjectWithTag("Holder").GetComponent<UIController>();
-        mainCamera = GameObject.FindGameObjectWithTag("Holder").GetComponent<CameraController>();
+        enemyMovementController = auxEnemyHolder.GetComponent<EnemyMovementController>();
+        enemySpawnController = auxEnemyHolder.GetComponent<EnemySpawnController>();
+        uiController = auxHolder.GetComponent<UIController>();
+        mainCamera = auxHolder.GetComponent<CameraController>();
+        spriteRenderer = this.GetComponent<SpriteRenderer>();
 	}
 	
 	void FixedUpdate () {
@@ -43,7 +48,7 @@ public class Enemy : MonoBehaviour {
         auxRandom = rng.Next(1, 101);
         auxGO = EnemyShotPooler.sharedInstance.GetPooledObject(); 
 
-        if ( auxRandom % 30 == 0 && auxGO != null && Time.time > fireRate) {
+        if ( auxRandom % 20 == 0 && auxGO != null && Time.time > fireRate) {
 
             fireRate = Time.time + attackSpeed;
 
@@ -60,31 +65,30 @@ public class Enemy : MonoBehaviour {
 
             int quantity = 0;
             Destroy(col.gameObject);
-            esc.ChainDestruction(x, y, type, ref quantity);
+            enemySpawnController.ChainDestruction(x, y, type, ref quantity);
 
-            uic.UpdateScore( fib(quantity+1) * quantity * 10 );
-            esc.KillEnemies(quantity);
+            uiController.UpdateScore( fib(quantity+1) * quantity * 10 );
+            enemySpawnController.KillEnemies(quantity);
             mainCamera.Shake(0.03f * quantity, 0.2f * quantity);
 
             return;
         }
         if ( col.gameObject.CompareTag("L_Limit")) {
-            emc.EnemiesGoDown();
-            emc.EnemiesGoRight();
+            enemyMovementController.EnemiesGoDown();
+            enemyMovementController.EnemiesGoRight();
             return;
         }
 
         if ( col.gameObject.CompareTag("R_Limit") ) {
-            emc.EnemiesGoDown();
-            emc.EnemiesGoLeft();
+            enemyMovementController.EnemiesGoDown();
+            enemyMovementController.EnemiesGoLeft();
             return;
         }
     }
 
-    void OnCollisionEnter2D(Collision2D col) {
-
+    public void ChangeSprite(Sprite[] s) {
+        spriteRenderer.sprite = s[type];
     }
-
     public int getType() { 
         return type; 
     }

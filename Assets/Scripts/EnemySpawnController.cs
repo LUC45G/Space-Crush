@@ -7,14 +7,20 @@ public class EnemySpawnController : MonoBehaviour {
     [SerializeField]
     private GameObject[] enemyList;
     [SerializeField]
-    private EnemyMovementController emc;
+    private UIController uiController;
     [SerializeField]
-    private UIController uic;
+    private Sprite[] deadSprites, movementSpritesUp, movementSpritesDown;
+    private Sprite[] currentSprites;
     private GameObject[,] enemiesGO;
     private Enemy[,] enemies;
-    private int columns, rows, totalEnemies;
+    private int columns, rows, totalEnemies, vert, hor;
     private System.Random r = new System.Random();
-    private int vert, hor;
+    private float animationTrigger = 0f, timeBetweenAnimation = 1.5f;
+    private Vector3 initialPosition;
+
+    void Awake() {
+        initialPosition = this.transform.position;
+    }
 
     void Init() {
         vert = (int) Camera.main.orthographicSize;
@@ -24,6 +30,8 @@ public class EnemySpawnController : MonoBehaviour {
         enemies = new Enemy[columns, rows];
         totalEnemies = columns*rows;
         Physics2D.queriesStartInColliders = false;
+        currentSprites = movementSpritesUp;
+        this.transform.position = initialPosition;
     }
 	
 	void OnEnable () {
@@ -47,11 +55,27 @@ public class EnemySpawnController : MonoBehaviour {
         }
 	}
 
+    void Update() {
+        if( Time.time > animationTrigger ) {
+            animationTrigger = Time.time + timeBetweenAnimation;
+
+            currentSprites = ( currentSprites == movementSpritesUp ) ? movementSpritesDown : movementSpritesUp ;
+
+            for(int i = 0; i < columns; i++)
+                for (int j = 0; j < rows; j++)
+                    if(enemies[i, j] != null)
+                        enemies[i, j].ChangeSprite(currentSprites);
+
+        }
+
+        
+    }
+
     public void KillEnemies(int quantity) {
         totalEnemies -= quantity;
 
         if(totalEnemies <= 0)
-            uic.LevelUp();
+            uiController.LevelUp();
             
     }
 
@@ -60,7 +84,8 @@ public class EnemySpawnController : MonoBehaviour {
         if ( enemies[x, y] == null ) return;
 
         if( x >= 0 && y >= 0 && x < columns && y < rows && enemies[x, y].getType() == type ) {
-            Destroy(enemiesGO[x, y].gameObject);
+            Destroy(enemiesGO[x, y].gameObject, 0.3f);
+            enemiesGO[x, y].GetComponent<SpriteRenderer>().sprite = deadSprites[type];
             enemiesGO[x, y] = null; 
             enemies[x, y] = null;
 
@@ -88,5 +113,9 @@ public class EnemySpawnController : MonoBehaviour {
         if( x < columns && x >= 0 && y-1 >= 0 )
             if (  enemies[x, y-1] != null && enemies[x, y-1].getType() == type ) 
                 this.ChainDestruction(x, y-1, type, ref quantity);
+    }
+
+    public Sprite getDeadSprite(int type) {
+        return deadSprites[type];
     }
 }

@@ -12,9 +12,12 @@ public class UIController : MonoBehaviour {
     [SerializeField]
     private Text livesText;
     [SerializeField]
-    private GameObject esc;
+    private GameObject mainCamera, LevelUpText, GameOverText, scoreTextGO, HPTextGO, enemiesController, enemiesGO;
+
     [SerializeField]
     private PlayerController player;
+    [SerializeField]
+    private GameObject protectionsController;
 
 	// Use this for initialization
 	void Start () {
@@ -28,14 +31,53 @@ public class UIController : MonoBehaviour {
 	}
 
     public void LevelUp() {
-        livesText.text = 3 + "";
-        esc.SetActive(false);
-        esc.SetActive(true);
-        player.RestartPosition();
+        StartCoroutine("DelayLevelUp");
     }
 
     public void RestartGame() {
+        StartCoroutine("DelayRestart");
+    }
+
+    IEnumerator DelayRestart() {
+        
+        HPTextGO.SetActive(false);
+        scoreTextGO.SetActive(false);
+        GameOverText.SetActive(true);
+        enemiesGO.SetActive(false);
+        Time.timeScale = 0f;
+
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        Time.timeScale = 1f;
+
+        HPTextGO.SetActive(true);
+        scoreTextGO.SetActive(true);
+        GameOverText.SetActive(false);
+        
         SceneManager.LoadScene(0);
+    }
+
+    IEnumerator DelayLevelUp() {
+        
+        HPTextGO.SetActive(false);
+        scoreTextGO.SetActive(false);
+        LevelUpText.SetActive(true);
+        Time.timeScale = 0f;
+
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        Time.timeScale = 1f;
+        
+        HPTextGO.SetActive(true);
+        scoreTextGO.SetActive(true);
+        LevelUpText.SetActive(false);
+
+        livesText.text = 3 + "";
+        enemiesController.SetActive(false);
+        protectionsController.SetActive(false);
+        enemiesController.SetActive(true);
+        protectionsController.SetActive(true);
+        player.RestartPositionAndLives();
     }
 
     public void UpdateScore(int newScore) {

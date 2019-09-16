@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour {
         mainCamera.Shake(0.5f, 0.7f);
         
         if(lives > 0)
-            uiController.HPLost(lives);
+            uiController.UpdateHP(lives);
         else
             uiController.RestartGame();
     }

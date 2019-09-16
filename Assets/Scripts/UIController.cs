@@ -10,7 +10,7 @@ public class UIController : MonoBehaviour {
     private Text scoreText;
     private int currentScore = 0;
     [SerializeField]
-    private Text livesText;
+    private GameObject [] lives;
     [SerializeField]
     private GameObject mainCamera, LevelUpText, GameOverText, scoreTextGO, HPTextGO, enemiesController, enemiesGO;
 
@@ -22,7 +22,7 @@ public class UIController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		scoreText.text = "Score: " + currentScore;
-        livesText.text = 3 + "";
+        
 	}
 	
 	// Update is called once per frame
@@ -63,6 +63,7 @@ public class UIController : MonoBehaviour {
         scoreTextGO.SetActive(false);
         LevelUpText.SetActive(true);
         Time.timeScale = 0f;
+        UpdateHP(0);
 
         yield return new WaitForSecondsRealtime(1.5f);
 
@@ -72,7 +73,7 @@ public class UIController : MonoBehaviour {
         scoreTextGO.SetActive(true);
         LevelUpText.SetActive(false);
 
-        livesText.text = 3 + "";
+        UpdateHP(3);
         enemiesController.SetActive(false);
         protectionsController.SetActive(false);
         enemiesController.SetActive(true);
@@ -85,7 +86,11 @@ public class UIController : MonoBehaviour {
         scoreText.text = "Score: " + currentScore;
     }
 
-    public void HPLost(int lives) {
-        livesText.text = lives + "";
+    public void UpdateHP(int hp) {
+        int i;
+        for(i = 0; i < hp; i++)
+            lives[i].SetActive(true);
+        for(int j = i; j < 3; j++)
+            lives[j].SetActive(false);
     }
 }

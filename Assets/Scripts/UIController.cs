@@ -32,6 +32,10 @@ public class UIController : MonoBehaviour {
 
     public void LevelUp() {
         StartCoroutine("DelayLevelUp");
+        GameObject[] bullets = GameObject.FindGameObjectsWithTag("Shot");
+
+        for(int i = 0; i < bullets.Length; i++ ) 
+            Destroy(bullets[i]);
     }
 
     public void RestartGame() {

@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour {
     private CameraController mainCamera;
     private SpriteRenderer spriteRenderer;
     private GameObject auxGO;
+    private LayerMask layerToIgnore;
     private System.Random rng = new System.Random(); // Generates random number used for random shooting
     private int auxRandom; // Random Integer used for random shooting
     private float fireRate = 0f, attackSpeed = 10f;
@@ -29,16 +30,17 @@ public class Enemy : MonoBehaviour {
         uiController = auxHolder.GetComponent<UIController>();
         mainCamera = auxHolder.GetComponent<CameraController>();
         spriteRenderer = this.GetComponent<SpriteRenderer>();
+        layerToIgnore = enemySpawnController.getLayerToIgnore();
 	}
 	
 	void FixedUpdate () {
-        
-        if (Physics2D.Raycast(transform.position, transform.TransformDirection(Vector3.down), 1f)) {
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down) , Color.green);
+        RaycastHit2D ray = Physics2D.Raycast(transform.position, transform.TransformDirection(Vector3.down), 4f);
+        if ( ray.collider != null ) {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down)*4 , Color.green);
         }
         else {
             Attack();
-            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down) , Color.red);
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down)*4 , Color.red);
         }
 
 

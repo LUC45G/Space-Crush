@@ -10,6 +10,8 @@ public class EnemySpawnController : MonoBehaviour {
     private UIController uiController;
     [SerializeField]
     private Sprite[] deadSprites, movementSpritesUp, movementSpritesDown;
+    [SerializeField]
+    private LayerMask layerToIgnore;
     private Sprite[] currentSprites;
     private GameObject[,] enemiesGO;
     private Enemy[,] enemies;
@@ -117,5 +119,9 @@ public class EnemySpawnController : MonoBehaviour {
 
     public Sprite getDeadSprite(int type) {
         return deadSprites[type];
+    }
+
+    public LayerMask getLayerToIgnore() {
+        return layerToIgnore;
     }
 }
